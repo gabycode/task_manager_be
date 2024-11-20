@@ -13,6 +13,7 @@
     "typescript": "^5.6.3"
   },
   "devDependencies": {
-    "@types/morgan": "^1.9.9"
+    "@types/morgan": "^1.9.9",
+    "prisma": "^5.22.0"
   }
 }

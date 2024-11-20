@@ -1,7 +1,12 @@
+import { Request, Response } from "express";
 import app from "./main";
+import routerUsers from "./src/modules/users/router";
 
-app.get("/", (req, res) => {
+app.use("/users", routerUsers);
+
+app.get("/", (req: Request, res: Response) => {
   res.send("activo");
+  console.log(req.params, req.query);
 });
 
 app.listen(3000, () => {
