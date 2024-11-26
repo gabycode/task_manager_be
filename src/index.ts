@@ -4,6 +4,8 @@ import express, { NextFunction, Request, Response } from "express";
 import morgan from "morgan";
 import { PORT, URL_APP } from "./config/vars";
 import routerUsers from "./modules/users/user.router";
+// import * as swaggerDocument from "./docs/swagger.json"; 
+import swaggerUi from "swagger-ui-express";
 
 const app = express();
 
@@ -12,6 +14,10 @@ app.use(morgan("combined"));
 app.use(cors());
 
 app.use("/api", routerUsers);
+
+// // Configurar Swagger
+// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 
 app.get("/", (req: Request, res: Response) => {
   res.send({ message: "Hello World" });

@@ -8,6 +8,9 @@ export const getAllUsers = async (req: any, res: any) => {
     const users = await prisma.user.findMany();
     res.json(users);
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ errors: error.errors });
+    }
     res.status(500).json({ error: "Error fetching users" });
   }
 };
@@ -24,6 +27,9 @@ export const getUserById = async (req: any, res: any) => {
     }
     res.json(user);
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ errors: error.errors });
+    }
     res.status(500).json({ error: "Error fetching user" });
   }
 };
@@ -75,6 +81,9 @@ export const deleteUser = async (req: any, res: any) => {
     });
     res.status(204).send();
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ errors: error.errors });
+    }
     res.status(500).json({ error: "Error deleting user" });
   }
 };
