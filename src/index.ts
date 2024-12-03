@@ -6,6 +6,7 @@ import { PORT, URL_APP } from "./config/vars";
 import routerUsers from "./modules/users/user.router";
 // import * as swaggerDocument from "./docs/swagger.json"; 
 import swaggerUi from "swagger-ui-express";
+import routerTasks from "./modules/tasks/task.router";
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(morgan("combined"));
 app.use(cors());
 
 app.use("/api", routerUsers);
+app.use("/api", routerTasks);
 
 // // Configurar Swagger
 // app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
@@ -24,7 +26,10 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  res.status(500).send("Algo salió mal");
+  res.status(500).json({
+    message: "Algo salió mal",
+    error: err
+  });
 });
 
 app.listen(PORT, () => {

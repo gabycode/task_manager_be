@@ -76,10 +76,18 @@ export const updateUser = async (req: any, res: any) => {
 export const deleteUser = async (req: any, res: any) => {
   const { id } = req.params;
   try {
+    const existingRecord = await prisma.user.findUnique({
+      where: { id: Number(id) },
+    });
+
+    if (!existingRecord) {
+      return res.status(404).json({ error: `Record with ID: ${id} not found.` });
+    }
+
     await prisma.user.delete({
       where: { id: Number(id) },
     });
-    res.status(204).send();
+    res.status(204).send(`Record with ID: ${id} did deleted.`);
   } catch (error) {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ errors: error.errors });

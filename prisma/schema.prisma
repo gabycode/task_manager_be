@@ -16,6 +16,8 @@ model User {
   lastName String
   email    String?   @unique
   tasks    Task[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime? @updatedAt
 }
 
 model Task {
@@ -23,7 +25,7 @@ model Task {
   title     String
   content   String
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime? @updatedAt
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
 }
