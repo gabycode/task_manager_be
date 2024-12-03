@@ -19,7 +19,7 @@ export const TaskSchemaCreate = z.object({
   .optional(),
 
 });
-
+ 
 // Validación para actualización de usuario
 export const TaskSchemaUpdate = z.object({
   title: z.string().min(2, "Title is required").optional(),
