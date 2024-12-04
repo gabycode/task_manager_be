@@ -1,10 +1,10 @@
 import { Router } from "express";
 import {  login, register } from "./auth.controller";
 
-const routerTasks: Router = Router();
+const routerAuth: Router = Router();
 
 // Usar funciones async directamente en las rutas
-routerTasks.get("/login", login);  
-routerTasks.get("/register", register);
+routerAuth.get("/login", login);  
+routerAuth.get("/register", register);
 
-export default routerTasks;
+export default routerAuth;
