@@ -4,6 +4,7 @@ import { z } from "zod";
 export const UserRegisterSchema = z.object({
   name: z.string().min(2, "Name is required"),
   lastName: z.string().min(2, "Description is required"),
+  password: z.string().min(8, "Password is required").optional(),
   email: z.string().min(2, "Description is required"),
 });
 
