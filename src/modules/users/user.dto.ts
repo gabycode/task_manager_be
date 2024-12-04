@@ -4,7 +4,8 @@ import { z } from "zod";
 export const UserSchemaCreate = z.object({
   name: z.string().min(2, "Name is required"),
   lastName: z.string().min(2, "Last Name is required"),
-  email: z.string().email("Invalid email format").optional(),
+  email: z.string().email("Invalid email format"),
+  password: z.string(),
   createdAt: z
     .preprocess(
       (arg) => (typeof arg === "string" ? new Date(arg) : arg),

@@ -16,6 +16,7 @@ app.use(cors());
 
 app.use("/api", routerUsers);
 app.use("/api", routerTasks);
+app.use("/api", routerAuth);
 
 // // Configurar Swagger
 // app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
