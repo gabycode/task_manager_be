@@ -29,7 +29,7 @@ model Task {
   updatedAt DateTime? @updatedAt
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
-  state     String @default("PENDING")
+  status     String @default("PENDING")
 }
 
 

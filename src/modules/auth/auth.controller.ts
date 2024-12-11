@@ -40,6 +40,7 @@ export const login = async (req: any, res: any) => {
     return res.status(200).json({
       message: "Login successful",
       token,
+      user: findUser,
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -50,7 +51,6 @@ export const login = async (req: any, res: any) => {
 };
 
 export const register = async (req: any, res: any) => {
-
   try {
     const { email, name, lastName, password } = UserRegisterSchema.parse(
       req.body,

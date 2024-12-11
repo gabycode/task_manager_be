@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { prisma } from "../..";
 import { TaskSchemaCreate, TaskSchemaUpdate } from "./task.dto";
+import { taskStatus } from "../../shared/enums/taskStatus";
 
 export const getAllTasks = async (req: any, res: any) => {
   try {
@@ -35,11 +36,11 @@ export const getTaskById = async (req: any, res: any) => {
 export const createTask = async (req: any, res: any) => {
   try {
     const validatedData = TaskSchemaCreate.parse(req.body);
-
+    validatedData["status"] = taskStatus.PENDING;
     const newTask = await prisma.task.create({
       data: {
         ...validatedData,
-        updatedAt: null
+        updatedAt: null,
       },
     });
 
@@ -77,13 +78,14 @@ export const updateTask = async (req: any, res: any) => {
 export const deleteTask = async (req: any, res: any) => {
   const { id } = req.params;
   try {
-
     const existingRecord = await prisma.task.findUnique({
       where: { id: Number(id) },
     });
 
     if (!existingRecord) {
-      return res.status(404).json({ error: `Record with ID: ${id} not found.` });
+      return res
+        .status(404)
+        .json({ error: `Record with ID: ${id} not found.` });
     }
 
     await prisma.task.delete({
