@@ -5,6 +5,10 @@ import { taskStatus } from "../../shared/enums/taskStatus";
 
 export const getAllTasks = async (req: any, res: any) => {
   try {
+    const { status } = req.query;
+    // CAPTURAMOS EL STATUS
+    console.log(status, "status");
+    // HACER BUSQUEDA AQUI JUNTO A PAGINACION, SEARCH
     const tasks = await prisma.task.findMany();
     res.json(tasks);
   } catch (error) {
