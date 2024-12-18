@@ -63,7 +63,7 @@ export const getAllUsers = async (req: any, res: any) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Error fetching users" });
+    res.status(500).json({ message: "Error fetching users", error });
   }
 };
 // Obtener un usuario por ID
