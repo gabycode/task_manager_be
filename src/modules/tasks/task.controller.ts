@@ -9,7 +9,11 @@ export const getAllTasks = async (req: any, res: any) => {
     // CAPTURAMOS EL STATUS
     console.log(status, "status");
     // HACER BUSQUEDA AQUI JUNTO A PAGINACION, SEARCH
-    const tasks = await prisma.task.findMany();
+    const tasks = await prisma.task.findMany({
+      where: {
+        status: status,
+      },
+    });
     res.json(tasks);
   } catch (error) {
     if (error instanceof z.ZodError) {
