@@ -4,7 +4,7 @@ import express, { NextFunction, Request, Response } from "express";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 import swaggerJSDoc from "swagger-jsdoc";
-import { PORT, URL_APP } from "./config/vars";
+import { PORT, URL_APP_DEV } from "./config/vars";
 import routerUsers from "./modules/users/user.router";
 import routerTasks from "./modules/tasks/task.router";
 import routerAuth from "./modules/auth/auth.router";
@@ -27,7 +27,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: `${URL_APP}:${PORT}/api`,
+        url: `${URL_APP_DEV}:${PORT}/api`,
       },
     ],
   },
@@ -57,7 +57,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 
 // Inicio del servidor
 app.listen(PORT, () => {
-  console.log(`Server is running on ${URL_APP}:${PORT}`);
+  console.log(`Server is running on ${URL_APP_DEV}:${PORT}`);
 });
 
 export const prisma = new PrismaClient();
