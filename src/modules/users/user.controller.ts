@@ -62,6 +62,9 @@ export const getAllUsers = async (req: any, res: any) => {
       },
     });
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ errors: error.errors });
+    }
     console.error(error);
     res.status(500).json({ message: "Error fetching users", error });
   }
@@ -74,14 +77,14 @@ export const getUserById = async (req: any, res: any) => {
       where: { id: Number(id) },
     });
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return res.status(404).json({ message: "User not found" });
     }
     res.json(user);
   } catch (error) {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ errors: error.errors });
     }
-    res.status(500).json({ error: "Error fetching user" });
+    res.status(500).json({ message: "Error fetching user", error });
   }
 };
 
@@ -99,7 +102,7 @@ export const createUser = async (req: any, res: any) => {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ errors: error.errors });
     }
-    res.status(500).json({ error: "Error creating user" });
+    res.status(500).json({ message: "Error creating user", error });
   }
 };
 
@@ -119,7 +122,7 @@ export const updateUser = async (req: any, res: any) => {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ errors: error.errors });
     }
-    res.status(500).json({ error: "Error updating user" });
+    res.status(500).json({ message: "Error updating user", error });
   }
 };
 
@@ -134,7 +137,7 @@ export const deleteUser = async (req: any, res: any) => {
     if (!existingRecord) {
       return res
         .status(404)
-        .json({ error: `Record with ID: ${id} not found.` });
+        .json({ message: `Record with ID: ${id} not found.` });
     }
 
     await prisma.user.delete({
@@ -145,6 +148,6 @@ export const deleteUser = async (req: any, res: any) => {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ errors: error.errors });
     }
-    res.status(500).json({ error: "Error deleting user" });
+    res.status(500).json({ message: "Error deleting user", error });
   }
 };

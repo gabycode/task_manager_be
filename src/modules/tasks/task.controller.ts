@@ -11,7 +11,7 @@ export const getAllTasks = async (req: any, res: any) => {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ errors: error.errors });
     }
-    res.status(500).json({ error: "Error fetching tasks" });
+    res.status(500).json({ message: "Error fetching tasks", error });
   }
 };
 
@@ -29,27 +29,30 @@ export const getTaskById = async (req: any, res: any) => {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ errors: error.errors });
     }
-    res.status(500).json({ error: "Error fetching task" });
+    res.status(500).json({ message: "Error fetching task", error });
   }
 };
 
 export const createTask = async (req: any, res: any) => {
   try {
     const validatedData = TaskSchemaCreate.parse(req.body);
-    validatedData["status"] = taskStatus.PENDING;
+
     const newTask = await prisma.task.create({
       data: {
         ...validatedData,
+        status: taskStatus.PENDING,
         updatedAt: null,
       },
     });
 
     res.status(201).json(newTask);
   } catch (error) {
+    // Captura errores de validación
     if (error instanceof z.ZodError) {
       return res.status(400).json({ errors: error.errors });
     }
-    res.status(500).json({ error: "Error creating task" });
+    // Manejo de otros errores
+    res.status(500).json({ message: "Error creating task", error });
   }
 };
 
@@ -71,7 +74,7 @@ export const updateTask = async (req: any, res: any) => {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ errors: error.errors });
     }
-    res.status(500).json({ error: "Error updating task" });
+    res.status(500).json({ message: "Error updating task", error });
   }
 };
 
@@ -96,6 +99,6 @@ export const deleteTask = async (req: any, res: any) => {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ errors: error.errors });
     }
-    res.status(500).json({ error: "Error deleting task" });
+    res.status(500).json({ message: "Error deleting task", error });
   }
 };
