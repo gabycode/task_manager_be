@@ -1,20 +1,61 @@
 import { z } from "zod";
 import { prisma } from "../..";
 import { TaskSchemaCreate, TaskSchemaUpdate } from "./task.dto";
-import { taskStatus } from "../../shared/enums/taskStatus";
+import { TaskStatusEnum } from "../../shared/enums/taskStatus";
+import SearchParams from "../../shared/interfaces/searchparams.interface";
 
 export const getAllTasks = async (req: any, res: any) => {
   try {
     const { status } = req.query;
+    const {
+      page = 1,
+      limit = 10,
+      param = "",
+    }: Partial<SearchParams> = req.query;
+
+    const pageNumber = Number(page) || 1;
+    const limitNumber = Number(limit) || 10;
+
     // CAPTURAMOS EL STATUS
     console.log(status, "status");
     // HACER BUSQUEDA AQUI JUNTO A PAGINACION, SEARCH
     const tasks = await prisma.task.findMany({
-      where: {
-        status: status,
+      take: limitNumber,
+      skip: (pageNumber - 1) * limitNumber,
+      where: param
+        ? {
+            status: status,
+            OR: [
+              { title: { contains: param } },
+              { content: { contains: param } },
+            ],
+          }
+        : { status: status },
+    });
+
+    const totalTask = await prisma.user.count({
+      where: param
+        ? {
+            OR: [
+              { name: { contains: param } },
+              { lastName: { contains: param } },
+              { email: { contains: param } },
+            ],
+          }
+        : {},
+    });
+
+    const totalPages = Math.ceil(totalTask / limitNumber);
+
+    res.json({
+      data: tasks,
+      pagination: {
+        currentPage: pageNumber,
+        totalPages,
+        limit: limitNumber,
+        totalRecords: totalPages,
       },
     });
-    res.json(tasks);
   } catch (error) {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ errors: error.errors });
@@ -48,7 +89,7 @@ export const createTask = async (req: any, res: any) => {
     const newTask = await prisma.task.create({
       data: {
         ...validatedData,
-        status: taskStatus.PENDING,
+        status: TaskStatusEnum.PENDING,
         updatedAt: null,
       },
     });

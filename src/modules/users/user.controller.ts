@@ -1,12 +1,8 @@
 import { z } from "zod";
 import { prisma } from "../..";
 import { UserSchemaCreate, UserSchemaUpdate } from "./user.dto";
+import SearchParams from "../../shared/interfaces/searchparams.interface";
 
-interface SearchParams {
-  page: number;
-  limit: number;
-  param: string;
-}
 
 // Obtener todos los usuarios con paginación
 export const getAllUsers = async (req: any, res: any) => {

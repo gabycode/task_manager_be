@@ -1,0 +1,26 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch Backend (CMD)",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "cmd.exe",
+      "runtimeArgs": [
+        "/c",
+        "nodemon",
+        "index.js" // Cambia "index.js" si tu archivo principal tiene otro nombre
+      ],
+      "console": "integratedTerminal",
+      "stopOnEntry": false,
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "NODE_ENV": "development",
+        "PORT": "3000"
+      },
+      "restart": true,
+      "internalConsoleOptions": "openOnSessionStart",
+      "skipFiles": ["<node_internals>/**"]
+    }
+  ]
+}

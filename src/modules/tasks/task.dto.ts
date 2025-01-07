@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { taskStatus } from "../../shared/enums/taskStatus";
+import { TaskStatusEnum } from "../../shared/enums/taskStatus";
 
 // Validación para creación de usuario
 export const TaskSchemaCreate = z.object({
@@ -7,9 +7,9 @@ export const TaskSchemaCreate = z.object({
   content: z.string().min(2, "Description is required"),
   userId: z.number(),
   status: z.enum([
-    taskStatus.PENDING,
-    taskStatus.CANCELLED,
-    taskStatus.COMPLETED,
+    TaskStatusEnum.PENDING,
+    TaskStatusEnum.CANCELLED,
+    TaskStatusEnum.COMPLETED,
   ]),
   createdAt: z
     .preprocess(
@@ -27,6 +27,8 @@ export const TaskSchemaCreate = z.object({
     ])
     .optional(),
 });
+
+export type ITaskSchemaCreate = z.infer<typeof TaskSchemaCreate>;
 
 // Validación para actualización de usuario
 export const TaskSchemaUpdate = z.object({

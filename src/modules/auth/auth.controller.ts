@@ -21,10 +21,7 @@ export const login = async (req: any, res: any) => {
       });
     }
 
-    const isPasswordValid = await bcrypt.compare(
-      password || "",
-      findUser.password,
-    );
+    const isPasswordValid = await bcrypt.compare(password, findUser.password);
     if (!isPasswordValid) {
       return res.status(401).json({
         error: "Invalid credentials",
@@ -40,7 +37,12 @@ export const login = async (req: any, res: any) => {
     return res.status(200).json({
       message: "Login successful",
       token,
-      user: findUser,
+      user: {
+        name: findUser?.name,
+        lastName: findUser?.lastName,
+        id: findUser?.id,
+        email: findUser?.email,
+      },
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
