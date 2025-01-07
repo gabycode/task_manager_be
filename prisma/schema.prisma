@@ -11,27 +11,34 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @unique @default(autoincrement())
-  name     String
-  lastName String
-  email    String   @unique
-  tasks    Task[]
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime? @updatedAt
+  id          Int       @id @unique @default(autoincrement())
+  name        String
+  lastName    String
+  email       String    @unique
+  tasks       Task[]
+  password    String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @updatedAt
+  disabled    Boolean   @default(false)
+  disabled_at DateTime?
+  updated_by  Int?
+  deleted_by  Int?
 }
 
 model Task {
-  id       Int    @id @unique @default(autoincrement())
-  title     String
-  content   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime? @updatedAt
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id])
-  status     String @default("PENDING")
+  id          Int       @id @unique @default(autoincrement())
+  title       String
+  content     String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @updatedAt
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+  status      String    @default("PENDING")
+  disabled    Boolean   @default(false)
+  disabled_at DateTime?
+  deleted_by  Int?
+  updated_by  Int?
 }
-
 
 // model Chat {
 //   id        Int   @id
