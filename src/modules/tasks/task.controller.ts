@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { prisma } from "../..";
-import { TaskSchemaCreate, TaskSchemaUpdate } from "./task.dto";
 import { TaskStatusEnum } from "../../shared/enums/taskStatus";
 import SearchParams from "../../shared/interfaces/searchparams.interface";
+import { TaskSchema } from "./task.dto";
 
 export const getAllTasks = async (req: any, res: any) => {
   try {
@@ -23,11 +23,11 @@ export const getAllTasks = async (req: any, res: any) => {
             status: status,
             disabled: false,
             OR: [
-              { title: { contains: param } },
+              { title: { contains: param } }, // Búsqueda en `title`
               { content: { contains: param } },
             ],
           }
-        : { status: status, disabled: false },
+        : { disabled: false, status: status },
     });
     console.log(
       tasks,
@@ -64,7 +64,7 @@ export const getAllTasks = async (req: any, res: any) => {
         currentPage: pageNumber,
         totalPages,
         limit: limitNumber,
-        totalRecords: totalPages,
+        totalRecords: totalTask,
       },
     });
   } catch (error) {
@@ -95,7 +95,12 @@ export const getTaskById = async (req: any, res: any) => {
 
 export const createTask = async (req: any, res: any) => {
   try {
-    const validatedData = TaskSchemaCreate.parse(req.body);
+    const data = {
+      ...req.body,
+      disabled: false,
+    };
+
+    const validatedData = TaskSchema.parse(data);
     console.log(validatedData, "validatedData");
     const newTask = await prisma.task.create({
       data: {
@@ -104,7 +109,7 @@ export const createTask = async (req: any, res: any) => {
         createdAt: new Date(),
         disabled: false,
         status: TaskStatusEnum.PENDING,
-        createdBy: validatedData.userId,
+        createdBy: validatedData.createdBy,
       },
     });
 
@@ -122,7 +127,7 @@ export const createTask = async (req: any, res: any) => {
 export const updateTask = async (req: any, res: any) => {
   const { id } = req.params;
   try {
-    const validatedData = TaskSchemaUpdate.parse(req.body);
+    const validatedData = TaskSchema.parse(req.body);
 
     const updatedTask = await prisma.task.update({
       where: { id: Number(id) },

@@ -1,7 +1,0 @@
-{
-    "watch": ["src"],
-    "ext": "ts",
-    "ignore": ["*.test.ts"],
-    "exec": "node --loader ts-node/esm"
-  }
-  
