@@ -28,6 +28,9 @@ export const getAllTasks = async (req: any, res: any) => {
             ],
           }
         : { disabled: false, status: status },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
     console.log(
       tasks,
