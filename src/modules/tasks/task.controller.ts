@@ -7,17 +7,13 @@ import SearchParams from "../../shared/interfaces/searchparams.interface";
 export const getAllTasks = async (req: any, res: any) => {
   try {
     const { status } = req.query;
-    const {
-      page = 1,
-      limit = 10,
-      param = "",
-    }: Partial<SearchParams> = req.query;
+    const { page, limit, param }: Partial<SearchParams> = req.query;
 
     const pageNumber = Number(page) || 1;
     const limitNumber = Number(limit) || 10;
 
     // CAPTURAMOS EL STATUS
-    console.log(status, "status");
+
     // HACER BUSQUEDA AQUI JUNTO A PAGINACION, SEARCH
     const tasks = await prisma.task.findMany({
       take: limitNumber,
@@ -33,7 +29,20 @@ export const getAllTasks = async (req: any, res: any) => {
           }
         : { status: status, disabled: false },
     });
-
+    console.log(
+      tasks,
+      "tasks",
+      limitNumber,
+      "limitNumber",
+      pageNumber,
+      "pageNumber",
+      status,
+      "status",
+      page,
+      limit,
+      param,
+      "page, limit, param",
+    );
     const totalTask = await prisma.task.count({
       where: param
         ? {
