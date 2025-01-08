@@ -1,13 +1,21 @@
 import { Router } from "express";
-import { getAllTasks, getTaskById, createTask, updateTask, deleteTask } from "./task.controller";
+import {
+  getAllTasks,
+  getTaskById,
+  createTask,
+  updateTask,
+  deleteTask,
+  disableTask,
+} from "./task.controller";
 
 const routerTasks: Router = Router();
 
 // Usar funciones async directamente en las rutas
-routerTasks.get("/tasks", getAllTasks);  
+routerTasks.get("/tasks", getAllTasks);
 routerTasks.get("/tasks/:id", getTaskById);
 routerTasks.post("/tasks", createTask);
 routerTasks.put("/tasks/:id", updateTask);
 routerTasks.delete("/tasks/:id", deleteTask);
+routerTasks.delete("/tasks/:id/:userId/disable", disableTask);
 
 export default routerTasks;

@@ -15,30 +15,38 @@ model User {
   name        String
   lastName    String
   email       String    @unique
-  tasks       Task[]
   password    String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime? @updatedAt
+  tasks       Task[]    @relation("UserTasksCreated")
+  tasksUpdated Task[]   @relation("UserTasksUpdated")
+  tasksDisabled Task[]  @relation("UserTasksDisabled")
   disabled    Boolean   @default(false)
   disabled_at DateTime?
   updated_by  Int?
-  deleted_by  Int?
+  disabled_by Int?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @updatedAt
 }
 
 model Task {
-  id          Int       @id @unique @default(autoincrement())
-  title       String
-  content     String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime? @updatedAt
-  userId      Int
-  user        User      @relation(fields: [userId], references: [id])
-  status      String    @default("PENDING")
-  disabled    Boolean   @default(false)
-  disabled_at DateTime?
-  deleted_by  Int?
-  updated_by  Int?
+  id           Int       @id @unique @default(autoincrement())
+  title        String
+  content      String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime? @updatedAt
+  status       String    @default("PENDING")
+  disabled     Boolean   @default(false)
+  disabled_at  DateTime?
+  
+  createdBy    Int       
+  creator      User      @relation("UserTasksCreated", fields: [createdBy], references: [id], onDelete: Cascade)
+
+  updatedBy    Int?    
+  updater      User?     @relation("UserTasksUpdated", fields: [updatedBy], references: [id], onDelete: SetNull)
+
+  disabledBy   Int?      
+  disabler     User?     @relation("UserTasksDisabled", fields: [disabledBy], references: [id], onDelete: SetNull)
 }
+
 
 // model Chat {
 //   id        Int   @id

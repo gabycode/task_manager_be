@@ -25,24 +25,26 @@ export const getAllTasks = async (req: any, res: any) => {
       where: param
         ? {
             status: status,
+            disabled: false,
             OR: [
               { title: { contains: param } },
               { content: { contains: param } },
             ],
           }
-        : { status: status },
+        : { status: status, disabled: false },
     });
 
-    const totalTask = await prisma.user.count({
+    const totalTask = await prisma.task.count({
       where: param
         ? {
+            status: status,
+            disabled: false,
             OR: [
-              { name: { contains: param } },
-              { lastName: { contains: param } },
-              { email: { contains: param } },
+              { title: { contains: param } },
+              { content: { contains: param } },
             ],
           }
-        : {},
+        : { status: status, disabled: false },
     });
 
     const totalPages = Math.ceil(totalTask / limitNumber);
@@ -85,12 +87,15 @@ export const getTaskById = async (req: any, res: any) => {
 export const createTask = async (req: any, res: any) => {
   try {
     const validatedData = TaskSchemaCreate.parse(req.body);
-
+    console.log(validatedData, "validatedData");
     const newTask = await prisma.task.create({
       data: {
-        ...validatedData,
+        title: validatedData.title,
+        content: validatedData.content,
+        createdAt: new Date(),
+        disabled: false,
         status: TaskStatusEnum.PENDING,
-        updatedAt: null,
+        createdBy: validatedData.userId,
       },
     });
 
@@ -149,5 +154,40 @@ export const deleteTask = async (req: any, res: any) => {
       return res.status(400).json({ errors: error.errors });
     }
     res.status(500).json({ message: "Error deleting task", error });
+  }
+};
+
+export const disableTask = async (req: any, res: any) => {
+  const { id, userId } = req.params;
+  console.log(id, userId, "id, userId");
+  try {
+    const existingRecord = await prisma.task.findUnique({
+      where: { id: Number(id) },
+    });
+
+    console.log(existingRecord, "existingRecord");
+    if (!existingRecord) {
+      return res
+        .status(404)
+        .json({ error: `Record with ID: ${id} not found.` });
+    }
+
+    await prisma.task.update({
+      where: { id: Number(id) },
+      data: {
+        disabled: true,
+        disabledBy: Number(userId),
+        disabled_at: new Date(),
+        updatedAt: new Date(),
+        updatedBy: Number(userId),
+      },
+    });
+
+    res.status(204).send(`Record with ID: ${id} did disabled.`);
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ errors: error.errors });
+    }
+    res.status(500).json({ message: "Error disabling task", error });
   }
 };
