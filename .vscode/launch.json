@@ -2,24 +2,31 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Launch Backend (CMD)",
       "type": "node",
       "request": "launch",
-      "runtimeExecutable": "cmd.exe",
-      "runtimeArgs": [
-        "/c",
-        "nodemon",
-        "index.js" // Cambia "index.js" si tu archivo principal tiene otro nombre
-      ],
-      "console": "integratedTerminal",
-      "stopOnEntry": false,
+      "name": "Run TypeScript",
+      "runtimeArgs": ["-r", "ts-node/register"],
+      "args": ["${workspaceFolder}/src/index.ts"],
       "cwd": "${workspaceFolder}",
-      "env": {
-        "NODE_ENV": "development",
-        "PORT": "3000"
-      },
-      "restart": true,
       "internalConsoleOptions": "openOnSessionStart",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug with Nodemon",
+      "runtimeExecutable": "nodemon",
+      "runtimeArgs": ["--inspect", "--watch", "src", "--ext", "ts", "--exec", "ts-node src/index.ts"],
+      "restart": true,
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach to Process",
+      "processId": "${command:PickProcess}",
       "skipFiles": ["<node_internals>/**"]
     }
   ]

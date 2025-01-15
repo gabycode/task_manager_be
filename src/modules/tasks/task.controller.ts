@@ -32,20 +32,7 @@ export const getAllTasks = async (req: any, res: any) => {
         createdAt: "desc",
       },
     });
-    console.log(
-      tasks,
-      "tasks",
-      limitNumber,
-      "limitNumber",
-      pageNumber,
-      "pageNumber",
-      status,
-      "status",
-      page,
-      limit,
-      param,
-      "page, limit, param",
-    );
+ 
     const totalTask = await prisma.task.count({
       where: param
         ? {
@@ -176,7 +163,8 @@ export const deleteTask = async (req: any, res: any) => {
 
 export const disableTask = async (req: any, res: any) => {
   const { id, userId } = req.params;
-  console.log(id, userId, "id, userId");
+  console.log('LLEGO', id, userId);
+
   try {
     const existingRecord = await prisma.task.findUnique({
       where: { id: Number(id) },
@@ -200,7 +188,7 @@ export const disableTask = async (req: any, res: any) => {
       },
     });
 
-    res.status(204).send(`Record with ID: ${id} did disabled.`);
+    res.status(200).send(`Record with ID: ${id} did disabled.`);
   } catch (error) {
     if (error instanceof z.ZodError) {
       return res.status(400).json({ errors: error.errors });

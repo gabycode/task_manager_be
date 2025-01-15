@@ -16,6 +16,6 @@ routerTasks.get("/tasks/:id", getTaskById);
 routerTasks.post("/tasks", createTask);
 routerTasks.put("/tasks/:id", updateTask);
 routerTasks.delete("/tasks/:id", deleteTask);
-routerTasks.delete("/tasks/:id/:userId/disable", disableTask);
+routerTasks.patch("/tasks/:id/:userId/disable", disableTask);
 
 export default routerTasks;
